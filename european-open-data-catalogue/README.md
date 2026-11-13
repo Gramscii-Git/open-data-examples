@@ -1,7 +1,7 @@
 # Gramscii European Open Data Catalogue
 
-A catalogue of more than half a million public datasets from over 40 European and
-international providers: what each dataset is, how it is structured, which codes and labels it
+A catalogue of 78,150 public datasets from 34 European, international and Italian
+providers: what each dataset is, how it is structured, which codes and labels it
 uses in each published language, where it can be read, and under which terms.
 It is built by Gramscii from the providers' own catalogues and structure
 services, and published on AWS as Apache Parquet tables.
@@ -11,8 +11,7 @@ geometries, rasters or granules, and no search vectors: values stay with the
 original provider, which each entry names and links.
 
 - **Bucket:** `s3://gramscii-european-open-data-catalogue` (region `eu-central-1`),
-  public and readable without an AWS account. The bucket is being set up with the AWS
-  Open Data team; until it opens, the same release is on Hugging Face.
+  public and readable without an AWS account.
 - **Same release on Hugging Face:** [Gramscii-IT/european-open-data-catalogue](https://huggingface.co/datasets/Gramscii-IT/european-open-data-catalogue),
   as one verified archive with a browsable viewer.
 - **Publisher and release checks:** [Gramscii-Git/open-data-catalogue](https://github.com/Gramscii-Git/open-data-catalogue).
@@ -20,15 +19,14 @@ original provider, which each entry names and links.
 
 ## Providers
 
-| Group | Providers |
+| Group | Providers (partition ids) |
 | --- | --- |
-| Official statistics | ISTAT, Eurostat (including Comext), the European Commission's DG EMPL and DG GROW, OECD, ILO, ECB, BIS, Deutsche Bundesbank, INSEE, Spain's INE, FAO |
-| Italian public finance and services | Dove vanno i nostri soldi (DVNS) and AgID's Cruscotto Italia municipal indicators |
-| National open data portals | dati.gov.it, data.gouv.fr, GovData, datos.gob.es |
-| Italian cities | Milano, Napoli, Roma, Torino and Bologna |
-| Urban and territorial planning | Comune di Milano (PGT), Regione Lombardia (PGT), Città metropolitana di Torino (PRGC), Provincia autonoma di Bolzano (PUC and PCTP), Comune di Genova (PUC), Regione del Veneto (PTRC), Regione Autonoma della Sardegna (municipal plans and its geoportal's catalogue), Regione Siciliana (PRG of 31 municipalities), and the national geodata catalogue RNDT's plan records |
-| Sardinia | The datasets of Sardinia's municipalities and Region on dati.gov.it, Sardegna Salute (health tables and facility registries), Sardegna Autonomie (registries of local authorities), the Region's GeoServer layers, GBIF's occurrence datasets and the European Environment Agency's map services over the island |
-| Earth observation, marine and geography | NASA Earthdata CMR, Copernicus Data Space STAC, Copernicus Marine, EMODnet, Overture Maps |
+| Official statistics | ISTAT (`istat`), Eurostat (`eurostat`, `eurostat-comext`), the European Commission's DG EMPL (`ec-empl`) and DG GROW (`ec-grow`), OECD (`oecd`), ILO (`ilo`), ECB (`ecb`), BIS (`bis`), Deutsche Bundesbank (`bundesbank`), INSEE (`insee`), FAO (`fao`) |
+| Italian public finance | Dove vanno i nostri soldi (`dvns`) and AgID's Cruscotto Italia municipal indicators (`cruscotto`) |
+| National open data portals | data.gouv.fr (`datagouv`) |
+| Italian cities | Milano (`milano`), Roma (`roma`), Torino (`torino`), Bologna (`bologna`), Napoli (`napoli`) |
+| Urban and territorial planning | Comune di Milano PGT (`milano-pgt`), Regione Lombardia PGT (`lombardia-pgt`), Città metropolitana di Torino PRGC (`torino-prgc`), Provincia autonoma di Bolzano (`bolzano-puc`), Comune di Genova PUC (`genova-puc`), Regione del Veneto PTRC (`veneto-ptrc`), Regione Autonoma della Sardegna's municipal plans (`sardegna-puc`), Regione Siciliana PRG (`sicilia-prg`) |
+| Sardinia | Sardinia's datasets on dati.gov.it (`datigov-sardegna`), Sardegna Salute (`sardegna-salute`), Sardegna Autonomie (`sardegna-autonomie`), the Region's GeoServer layers (`sardegna-geoserver`), GBIF's occurrence datasets (`gbif-sardegna`) and the European Environment Agency's map services over the island (`eea-sardegna`) |
 
 The manifest of each release counts the datasets of every provider.
 
@@ -47,6 +45,7 @@ s3://gramscii-european-open-data-catalogue/
     ├── opendata_terms/provider=…/data_0.parquet
     ├── opendata_labels/provider=…/data_0.parquet
     ├── opendata_meta_reports/provider=…/data_0.parquet
+    ├── opendata_document_codes/provider=…/data_0.parquet
     ├── opendata_documents/provider=…/data_0.parquet
     ├── opendata_native_objects/data_0.parquet
     ├── opendata_native_bindings/provider=…/data_0.parquet
@@ -85,6 +84,7 @@ One row of each table is one row of the catalogue's database, with the same keys
 | `opendata_terms` | each code of a code list or concept scheme, in each published language | `provider`, `language`, `scope`, `code` |
 | `opendata_labels` | each dataset's labels in one language | `provider`, `dataset_id`, `language` |
 | `opendata_meta_reports` | each provider metadata report (methodology and quality texts) | `provider`, `report_key` |
+| `opendata_document_codes` | each dimension a dataset's searchable description names, with the codes it names | `provider`, `dataset_id`, `dimension_id` |
 | `opendata_documents` | each dataset's searchable description in one language, with its provenance (`projection`) | `provider`, `dataset_id`, `language` |
 | `opendata_native_objects` | each provider response kept verbatim (the SDMX structure messages of ISTAT and Eurostat), addressed by the SHA-256 of its bytes | `sha256` |
 | `opendata_native_bindings` | each dataset read from native objects: which structure and flow it was read from, and a receipt (URL, status, time, size, SHA-256) for every response | `provider`, `dataset_id` |
